@@ -11,8 +11,6 @@
             <div>
                 <form action="" method="post">
                     <input type="text" name="name" id="name" placeholder="Buscar">
-                    <br>
-                    <input type="submit" value="procurar">
                 </form>
             </div>
         </header>
@@ -59,7 +57,30 @@
                             $airQuality = $air['list'][0]['main']['aqi'];
                             $gas = $air['list'][0]['components'];
 
-                        } else {
+                            switch($airQuality) {
+                                case "1":
+                                    $quality = "Boa";
+                                    $recomendation = "Bom para atividades ao ar livre";
+                                    break;
+                                case "2":
+                                    $quality = "Razoável";
+                                    $recomendation = "Atividades ao ar livre são aceitaveis";
+                                    break;
+                                case "3":
+                                    $quality = "Moderada";
+                                    $recomendation = "Evite atividades intensas ao ar livre";
+                                    break;
+                                case "4":
+                                    $quality = "Ruim";
+                                    $recomendation = "Evite atividades fisicas ao ar livre";
+                                    break;
+                                case "5":
+                                    $quality = "Péssima";
+                                    $recomendation = "Evite sair de casa";
+                                    break;
+                            }
+                            }
+                        else {
                         $airError = "Informações sobre a qualidade do ar não foram encontradas";
                         }
                     }
@@ -68,28 +89,10 @@
                     $geoError = "Nenhuma cidade encontrada";
                 }
 
-                switch($airQuality) {
-                    case "1":
-                        $quality = "Muito Bom";
-                        break;
-                    case "2":
-                        $quality = "Bom";
-                        break;
-                    case "3":
-                        $quality = "Moderada";
-                        break;
-                    case "4":
-                        $quality = "Ruim";
-                        break;
-                    case "5":
-                        $quality = "Péssimo";
-                        break;
-                }
-
             }
             
         ?>
-        <?php if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['name'])) :?>
+        <?php if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['name'] && !empty($cities))) :?>
             <main>
                 <div>
                     <h1> CIDADE: <?=$cityName?> </h1>
@@ -101,32 +104,37 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>CO</th>
-                                    <th>NO</th>
-                                    <th>NO2</th>
-                                    <th>O3</th>
-                                    <th>SO2</th>
                                     <th>PM2.5</th>
                                     <th>PM10</th>
-                                    <th>NH3</th>
+                                    <th>NO2</th>
+                                    <th>SO2</th>
+                                    <th>O3</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><?=$gas['co']?></td>
-                                    <td><?=$gas['no']?></td>
-                                    <td><?=$gas['no2']?></td>
-                                    <td><?=$gas['o3']?></td>
-                                    <td><?=$gas['so2']?></td>
                                     <td><?=$gas['pm2_5']?></td>
                                     <td><?=$gas['pm10']?></td>
-                                    <td><?=$gas['nh3']?></td>
+                                    <td><?=$gas['no2']?></td>
+                                    <td><?=$gas['so2']?></td>
+                                    <td><?=$gas['o3']?></td>
                                 </tr>
                             </tbody>
                         </table>
+                        <div>
+                            Recomendações: <?= $recomendation ?>;
+                        </div>
                     </div>
                 </div>
             </main>
-        <?php endif;?>
+        <?php elseif(!empty($cities) && empty($air)) :?>
+            <main>
+                <div><?= $airError ?></div>
+            </main>
+        <?php else :?>
+            <main>
+                <div><?= $geoError ?></div>
+            </main>
+        <?php endif ;?>
     </body>
 </html>
