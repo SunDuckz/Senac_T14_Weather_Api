@@ -9,8 +9,8 @@
     <body>
         <header>
             <div>
-                <form action="" method="post">
-                    <input type="text" name="name" id="name" placeholder="Buscar">
+                <form action="" method="post" class="search-form">
+                    <input type="text" name="name" id="name" placeholder="Buscar" class="search-input">
                 </form>
             </div>
         </header>
@@ -18,13 +18,14 @@
         <?php
 
             if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['name'])) {
-
+                
                 $name = str_replace(" ","_",htmlspecialchars($_POST['name']));
+                $apiKey = "e8637565bddc7298468754423329be60";
 
                 $curl = curl_init();
                 curl_setopt_array($curl, [
             
-                CURLOPT_URL => "http://api.openweathermap.org/geo/1.0/direct?q=". $name . "&limit=1&appid=e8637565bddc7298468754423329be60",
+                CURLOPT_URL => "http://api.openweathermap.org/geo/1.0/direct?q=". $name . "&limit=1&appid=" . $apiKey,
             
                 CURLOPT_RETURNTRANSFER => true
                 ]);
@@ -43,7 +44,7 @@
                         $curl = curl_init();
                             curl_setopt_array($curl, [
             
-                            CURLOPT_URL => "http://api.openweathermap.org/data/2.5/air_pollution?lat=".$lat."&lon=".$lon."&appid=e8637565bddc7298468754423329be60",
+                            CURLOPT_URL => "http://api.openweathermap.org/data/2.5/air_pollution?lat=".$lat."&lon=".$lon."&appid=" . $apiKey,
             
                             CURLOPT_RETURNTRANSFER => true
                         ]);
@@ -60,23 +61,23 @@
                             switch($airQuality) {
                                 case "1":
                                     $quality = "Boa";
-                                    $recomendation = "Bom para atividades ao ar livre";
+                                    $recommendation = "Bom para atividades ao ar livre";
                                     break;
                                 case "2":
                                     $quality = "Razoável";
-                                    $recomendation = "Atividades ao ar livre são aceitaveis";
+                                    $recommendation = "Atividades ao ar livre são aceitaveis";
                                     break;
                                 case "3":
                                     $quality = "Moderada";
-                                    $recomendation = "Evite atividades intensas ao ar livre";
+                                    $recommendation = "Evite atividades intensas ao ar livre";
                                     break;
                                 case "4":
                                     $quality = "Ruim";
-                                    $recomendation = "Evite atividades fisicas ao ar livre";
+                                    $recommendation = "Evite atividades fisicas ao ar livre";
                                     break;
                                 case "5":
                                     $quality = "Péssima";
-                                    $recomendation = "Evite sair de casa";
+                                    $recommendation = "Evite sair de casa";
                                     break;
                             }
                             }
@@ -92,23 +93,26 @@
             }
             
         ?>
-        <?php if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['name'] && !empty($cities))) :?>
+        <?php if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['name']) && !empty($cities)) :?>
             <main>
-                <div>
-                    <h1> CIDADE: <?=$cityName?> </h1>
+
+            <div class="city-box">
+                <div class="city-name">
+                    <div>Cidade</div>
+                    <h1><?=$cityName?> </h1>
                 </div>
-                <div class="full-box">    
-                    <div>
+                <div>    
+                    <div class="quality-box">
                         <h2>Indice de qualidade do ar: <?=$quality?></h2>
                         <h3>Componentes de poluição:</h3>
-                        <table>
+                        <table class="pollution-table">
                             <thead>
                                 <tr>
                                     <th>PM2.5</th>
                                     <th>PM10</th>
-                                    <th>NO2</th>
-                                    <th>SO2</th>
-                                    <th>O3</th>
+                                    <th>NO₂</th>
+                                    <th>SO₂</th>
+                                    <th>O₃</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -121,20 +125,21 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <div>
-                            Recomendações: <?= $recomendation ?>;
+                        <div class="recommendation">
+                            Recomendações: <?= $recommendation ?>;
                         </div>
                     </div>
                 </div>
             </main>
         <?php elseif(!empty($cities) && empty($air)) :?>
             <main>
-                <div><?= $airError ?></div>
+                <div class="error-message"><?= $airError ?></div>
             </main>
-        <?php else :?>
+        <?php elseif ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['name']) && empty($cities)) :?>
             <main>
-                <div><?= $geoError ?></div>
+                <div class="error-message"><?= $geoError ?></div>
             </main>
         <?php endif ;?>
+        </div>
     </body>
 </html>
