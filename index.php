@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API</title>
-    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="public/style/style.css">
 </head>
-    <body>
+<body>
         <header>
             <div>
                 <form action="" method="post" class="search-form">
-                    <input type="text" name="name" id="name" placeholder="Buscar" class="search-input">
+                    <input type="text" name="name" id="name" placeholder="Cidade" class="search-input">
                 </form>
             </div>
         </header>
@@ -61,26 +61,31 @@
                             switch($airQuality) {
                                 case "1":
                                     $quality = "Boa";
+                                    $qualityClass = "quality-good";
                                     $recommendation = "Bom para atividades ao ar livre";
                                     break;
                                 case "2":
                                     $quality = "Razoável";
-                                    $recommendation = "Atividades ao ar livre são aceitaveis";
+                                    $qualityClass = "quality-fair";
+                                    $recommendation = "Atividades ao ar livre são aceitáveis";
                                     break;
                                 case "3":
                                     $quality = "Moderada";
+                                    $qualityClass = "quality-moderate";
                                     $recommendation = "Evite atividades intensas ao ar livre";
                                     break;
                                 case "4":
                                     $quality = "Ruim";
-                                    $recommendation = "Evite atividades fisicas ao ar livre";
+                                    $qualityClass = "quality-poor";
+                                    $recommendation = "Evite atividades físicas ao ar livre";
                                     break;
                                 case "5":
                                     $quality = "Péssima";
+                                    $qualityClass = "quality-very-poor";
                                     $recommendation = "Evite sair de casa";
                                     break;
                             }
-                            }
+                        }
                         else {
                         $airError = "Informações sobre a qualidade do ar não foram encontradas";
                         }
@@ -99,34 +104,42 @@
             <div class="city-box">
                 <div class="city-name">
                     <div>Cidade</div>
-                    <h1><?=$cityName?> </h1>
+                    <h1><?=$cityName?></h1>
                 </div>
                 <div>    
                     <div class="quality-box">
-                        <h2>Indice de qualidade do ar: <?=$quality?></h2>
-                        <h3>Componentes de poluição:</h3>
-                        <table class="pollution-table">
-                            <thead>
-                                <tr>
-                                    <th>PM2.5</th>
-                                    <th>PM10</th>
-                                    <th>NO₂</th>
-                                    <th>SO₂</th>
-                                    <th>O₃</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><?=$gas['pm2_5']?></td>
-                                    <td><?=$gas['pm10']?></td>
-                                    <td><?=$gas['no2']?></td>
-                                    <td><?=$gas['so2']?></td>
-                                    <td><?=$gas['o3']?></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="recommendation">
-                            Recomendações: <?= $recommendation ?>;
+                        <div class="right-panel">
+                            <div id="map"></div>
+                        </div>
+                        
+                        <div class="left-panel">
+                            <h2>Índice de qualidade do ar: <span class="<?=$qualityClass?>"><?=$quality?></span></h2>
+                                <h3>Componentes de poluição - (em μg/m³)</h3>
+                                <div class="responsive">
+                                    <table class="pollution-table">
+                                        <thead>
+                                            <tr>
+                                                <th>PM2.5</th>
+                                                <th>PM10</th>
+                                                <th>NO₂</th>
+                                                <th>SO₂</th>
+                                                <th>O₃</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><?=$gas['pm2_5']?></td>
+                                                <td><?=$gas['pm10']?></td>
+                                                <td><?=$gas['no2']?></td>
+                                                <td><?=$gas['so2']?></td>
+                                                <td><?=$gas['o3']?></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="recommendation">
+                                    Recomendações: <?= $recommendation ?>;
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -142,4 +155,9 @@
         <?php endif ;?>
         </div>
     </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css"/>
+    <script src="public/javascript/script.js">
+
+    </script>
 </html>
