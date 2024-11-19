@@ -21,17 +21,3 @@ document.addEventListener("DOMContentLoaded", function() {
         atualizarMapa(lat, lon); 
     }
 )
-
-// function buscaDadosCidade(){
-//     var cidade = "Santa Cruz do Sul";//document.getElementById("campo_cidade").value;
-//     $.ajax(
-//         {
-//             url: "buscarInformacoesCidade.php", 
-//             method: "POST",
-//             data: {"name": cidade},
-//             success: function(result){
-//                 console.log(result);
-//             }
-//         }
-//     );
-// }

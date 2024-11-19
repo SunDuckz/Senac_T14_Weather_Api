@@ -3,26 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API</title>
+    <title>Pesquisa cidades</title>
     <link rel="stylesheet" href="style/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css"/>
 </head>
 <body>
-    <div>
-
         <header>
             <div>
                 <form action="" method="post" class="search-form">
-                    <input  type="text" name="name" id="name" placeholder="Cidade" class="search-input">
+                    <input type="text" name="name" id="name" placeholder="Cidade" class="search-input">
+                    <button class="botao">Pesquisar</button>
                 </form>
             </div>
         </header>
-    </div>
-
     <?php
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['name'])) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['name'])) {
         
         $name = str_replace(" ","_",htmlspecialchars($_POST['name']));
         $apiKey = "e8637565bddc7298468754423329be60";
@@ -36,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['name'])) {
         ]);
         $geoResponse = curl_exec($curl);
         curl_close($curl);
-        
+
         $cities = json_decode($geoResponse, true);
         
         
@@ -45,18 +42,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['name'])) {
                 $lat = $city['lat'];
                 $lon = $city['lon'];
                 $cityName = $city['name'];
-                
+
                 $curl = curl_init();
-                curl_setopt_array($curl, [
-                    
+                    curl_setopt_array($curl, [
+
                     CURLOPT_URL => "http://api.openweathermap.org/data/2.5/air_pollution?lat=".$lat."&lon=".$lon."&appid=" . $apiKey,
-                    
+
                     CURLOPT_RETURNTRANSFER => true
                 ]);
                 
                 $airResponse = curl_exec($curl);
                 curl_close($curl);
-                
+
                 $air = json_decode($airResponse, true);
 
                 if (!empty($air['list'])) {
@@ -89,39 +86,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['name'])) {
                             $qualityClass = "quality-very-poor";
                             $recommendation = "Evite sair de casa";
                             break;
-                        }
+                    }
 
-                    // return json_encode("{ 
-                    //     status: '1', 
-                    //     quality: $quality, 
-                    //     qualityClass: $qualityClass, 
-                    //     recommendation: $recommendation, 
-                    //     airQuality: $airQuality,
-                    //     lat: $lat,
-                    //     lon: $lon,
-                    //     cityName: $cityName,
-                    // }");
+              
                 }
                 else {
                     $airError = "Informações sobre a qualidade do ar não foram encontradas";
-                    //return json_encode("{ status: '2', error: $airError, }");
                 }
             }
         }
         else{
             $geoError = "Nenhuma cidade encontrada";
-            //return json_encode("{ status: '3', error: $geoError, }");
         }
 
     }
     ?>
             
-            <?php if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['name']) && !empty($cities)) :?>
+    <?php if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['name']) && !empty($cities)) :?>
         <main>
 
             <div id="lat" style="display: none;"><?=$lat?></div>
             <div id="lon" style="display: none;"><?=$lon?></div>
-            
+
             <div class="city-box">
                 <div class="city-name">
                     <div>Cidade</div>
@@ -132,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['name'])) {
                         <div class="left-panel">
                             <h2>Índice de qualidade do ar: <span class="<?=$qualityClass?>"><?=$quality?></span></h2>
                             <h3>Componentes de poluição - (em μg/m³)</h3>
-                            <div class="responsive">
+                                <div class="responsive">
                                     <table class="pollution-table">
                                         <thead>
                                             <tr>

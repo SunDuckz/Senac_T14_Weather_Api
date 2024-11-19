@@ -1,28 +1,38 @@
 /* style/style.css */
 
+html{
+    background-image: url("../images/city.jpg");
+    background-size: cover; 
+    background-repeat: no-repeat; 
+    height: 100vh;
+    width: 100vw;
+}
+
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-image: url("../images/cityBackground.jpg");
+    background-image: url("../images/city.jpg");
     background-size: cover; 
     background-repeat: no-repeat; 
-    backdrop-filter: blur(1);
+    height: 100vh;
+    width: 100vw;
     color: #333;
 }
 
-
 header {
-    background: rgb(202,67,6);
-    background: linear-gradient(90deg, rgba(202,67,6,1) 10%, rgba(255,140,0,1) 100%);
-    padding: 20px 0;
+    background: rgb(3,137,230);
+    background: linear-gradient(90deg ,rgb(3 137 230 / 0%) 0%, rgb(16 114 168 / 11%) 100%);
+    padding: 20px;
     text-align: center;
-    border-bottom:2px solid black;
 }
 
 .search-form {
     margin: 0 auto;
-    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
 }
 
 .search-input {
@@ -51,15 +61,13 @@ main {
 }
 .right-panel{
     display: flex;
-    width: 70%;
-    margin: 0px;
-
+    margin: 10px;
+    flex-direction: column;
 }
 
 .left-panel {
     display: flex;
     padding-right: 15px;
-    width: 70%;
     flex-direction: column;
 }
 
@@ -132,7 +140,7 @@ main {
 }
 
 .pollution-table th {
-    background-color: rgba(202,67,6,1);
+    background-color: #267ECA;
     color: #fff;
 }
 
@@ -164,6 +172,10 @@ main {
     overflow-x: auto;
 }
 
+.search-form{
+    width: 90%;
+}
+
 .city-name {
     font-size: 20px;
     font-weight: 600;
@@ -173,7 +185,7 @@ main {
 
 .search-input {
     padding: 12px;
-    width: 250px;
+    width: 60%;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 16px;
@@ -193,15 +205,30 @@ main {
     border: 1px solid #ddd;
     text-align: center;
     font-size: 16px;
-    color: #555;
-}
-
-.pollution-table th {
-    background-color: rgba(202,67,6,1);
-    color: #fff;
 }
 
 .pollution-table td {
     background-color: #fafafa;
 }
+}
+.botao {
+    background-color: #267ECA;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.botao:hover {
+    background-color: #3a92e5;
+    transform: scale(1.05);
+}
+
+.botao:active {
+    background-color: #1b6fb3;
+    transform: scale(1);
 }
