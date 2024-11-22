@@ -21,99 +21,115 @@
     </div>
 
     <?php
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['name'])) {
+        require_once 'buscarInformacoesCidade.php';
+        $getApiInfo = new getApiInfo();
+        $json = $getApiInfo->getCityInfo();
         
-        $name = str_replace(" ","_",htmlspecialchars($_POST['name']));
-        $apiKey = "e8637565bddc7298468754423329be60";
+        $jsonDecoded = json_decode($json,true);
+        var_dump($jsonDecoded)
+        //$cityName = $jsonDecoded['cityName'];
+       // $qualityClass
+        //$quality
 
-        $curl = curl_init();
-        curl_setopt_array($curl, [
+        //$gas = $jsonDecoded['gas'];
+       // $recommendation = $jsonDecoded['recommendation'];
 
-        CURLOPT_URL => "http://api.openweathermap.org/geo/1.0/direct?q=". $name . "&limit=1&appid=" . $apiKey,
+        
+       // $airError = $jsonDecoded['airError']
+      //  $geoError
 
-        CURLOPT_RETURNTRANSFER => true
-        ]);
-        $geoResponse = curl_exec($curl);
-        curl_close($curl);
+// if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['name'])) {
+
+//         $name = str_replace(" ","_",htmlspecialchars($_POST['name']));
+//         $apiKey = "e8637565bddc7298468754423329be60";
+
+//         $curl = curl_init();
+//         curl_setopt_array($curl, [
+
+//         CURLOPT_URL => "http://api.openweathermap.org/geo/1.0/direct?q=". $name . "&limit=1&appid=" . $apiKey,
+
+//         CURLOPT_RETURNTRANSFER => true
+//         ]);
+//         $geoResponse = curl_exec($curl);
+//         curl_close($curl);
         
-        $cities = json_decode($geoResponse, true);
+//         $cities = json_decode($geoResponse, true);
         
         
-        if(!empty($cities)){
-            foreach ($cities as $city){
-                $lat = $city['lat'];
-                $lon = $city['lon'];
-                $cityName = $city['name'];
+//         if(!empty($cities)){
+//             foreach ($cities as $city){
+//                 $lat = $city['lat'];
+//                 $lon = $city['lon'];
+//                 $cityName = $city['name'];
                 
-                $curl = curl_init();
-                curl_setopt_array($curl, [
+//                 $curl = curl_init();
+//                 curl_setopt_array($curl, [
                     
-                    CURLOPT_URL => "http://api.openweathermap.org/data/2.5/air_pollution?lat=".$lat."&lon=".$lon."&appid=" . $apiKey,
+//                     CURLOPT_URL => "http://api.openweathermap.org/data/2.5/air_pollution?lat=".$lat."&lon=".$lon."&appid=" . $apiKey,
                     
-                    CURLOPT_RETURNTRANSFER => true
-                ]);
+//                     CURLOPT_RETURNTRANSFER => true
+//                 ]);
                 
-                $airResponse = curl_exec($curl);
-                curl_close($curl);
+//                 $airResponse = curl_exec($curl);
+//                 curl_close($curl);
                 
-                $air = json_decode($airResponse, true);
+//                 $air = json_decode($airResponse, true);
 
-                if (!empty($air['list'])) {
-                    $airQuality = $air['list'][0]['main']['aqi'];
-                    $gas = $air['list'][0]['components'];
+//                 if (!empty($air['list'])) {
+//                     $airQuality = $air['list'][0]['main']['aqi'];
+//                     $gas = $air['list'][0]['components'];
 
-                    switch($airQuality) {
-                        case "1":
-                            $quality = "Boa";
-                            $qualityClass = "quality-good";
-                            $recommendation = "Bom para atividades ao ar livre";
-                            break;
-                        case "2":
-                            $quality = "Razoável";
-                            $qualityClass = "quality-fair";
-                            $recommendation = "Atividades ao ar livre são aceitáveis";
-                            break;
-                        case "3":
-                            $quality = "Moderada";
-                            $qualityClass = "quality-moderate";
-                            $recommendation = "Evite atividades intensas ao ar livre";
-                            break;
-                        case "4":
-                            $quality = "Ruim";
-                            $qualityClass = "quality-poor";
-                            $recommendation = "Evite atividades físicas ao ar livre";
-                            break;
-                        case "5":
-                            $quality = "Péssima";
-                            $qualityClass = "quality-very-poor";
-                            $recommendation = "Evite sair de casa";
-                            break;
-                        }
+//                     switch($airQuality) {
+//                         case "1":
+//                             $quality = "Boa";
+//                             $qualityClass = "quality-good";
+//                             $recommendation = "Bom para atividades ao ar livre";
+//                             break;
+//                         case "2":
+//                             $quality = "Razoável";
+//                             $qualityClass = "quality-fair";
+//                             $recommendation = "Atividades ao ar livre são aceitáveis";
+//                             break;
+//                         case "3":
+//                             $quality = "Moderada";
+//                             $qualityClass = "quality-moderate";
+//                             $recommendation = "Evite atividades intensas ao ar livre";
+//                             break;
+//                         case "4":
+//                             $quality = "Ruim";
+//                             $qualityClass = "quality-poor";
+//                             $recommendation = "Evite atividades físicas ao ar livre";
+//                             break;
+//                         case "5":
+//                             $quality = "Péssima";
+//                             $qualityClass = "quality-very-poor";
+//                             $recommendation = "Evite sair de casa";
+//                             break;
+//                         }
 
-                    // return json_encode("{ 
-                    //     status: '1', 
-                    //     quality: $quality, 
-                    //     qualityClass: $qualityClass, 
-                    //     recommendation: $recommendation, 
-                    //     airQuality: $airQuality,
-                    //     lat: $lat,
-                    //     lon: $lon,
-                    //     cityName: $cityName,
-                    // }");
-                }
-                else {
-                    $airError = "Informações sobre a qualidade do ar não foram encontradas";
-                    //return json_encode("{ status: '2', error: $airError, }");
-                }
-            }
-        }
-        else{
-            $geoError = "Nenhuma cidade encontrada";
-            //return json_encode("{ status: '3', error: $geoError, }");
-        }
+//                     // return json_encode("{ 
+//                     //     status: '1', 
+//                     //     quality: $quality, 
+//                     //     qualityClass: $qualityClass, 
+//                     //     recommendation: $recommendation, 
+//                     //     airQuality: $airQuality,
+//                     //     lat: $lat,
+//                     //     lon: $lon,
+//                     //     cityName: $cityName,
+//                     // }");
+//                 }
+//                 else {
+//                     $airError = "Informações sobre a qualidade do ar não foram encontradas";
+//                     //return json_encode("{ status: '2', error: $airError, }");
+//                 }
+//             }
+//         }
+//         else{
+//             $geoError = "Nenhuma cidade encontrada";
+//             //return json_encode("{ status: '3', error: $geoError, }");
+//         }
 
-    }
+//     }
     ?>
             
             <?php if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['name']) && !empty($cities)) :?>
@@ -159,11 +175,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['name'])) {
                                 </div>
                             </div>
                         </div>
-                        <div class="right-panel">
-                            <div id="map" style="height: 400px;margin-top:20px;position:relative"></div>
+                            <div id="map" style="height:400px;margin-top:20px;position:relative"></div>
+                    </div>
+                    <div>
+                        
+                    </div>
+                    <div class="subtitles-box">
+                        <div>
+                            <span class="quality-good">aa</span><span> A qualidade do ar é boa</span>
                         </div>
                     </div>
-            </main>
+                </main>
         <?php elseif(!empty($cities) && empty($air)) :?>
             <main>
                 <div class="error-message"><?= $airError ?></div>
@@ -172,8 +194,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['name'])) {
             <main>
                 <div class="error-message"><?= $geoError ?></div>
             </main>
+        <?php elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($_POST['name'])) :?>
+            <main>
+                <div class="error-message"> Coloque o nome de uma cidade! </div>
+            </main>
         <?php endif ;?>
-        </div>
     </body>
     <script src="javascript/script.js"></script> 
 </html>
